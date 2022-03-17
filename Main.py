@@ -15,6 +15,7 @@ score = 0
 
 
 def logic():
+    full = False
     global score
     player_height = 150
     player_width = 10
@@ -45,6 +46,8 @@ def logic():
                     player_velocity -= 6
                 if event.key == pygame.K_DOWN or event.key == pygame.K_s:
                     player_velocity += 6
+                if event.key == pygame.K_f:
+                    pygame.display.toggle_fullscreen()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP or event.key == pygame.K_w:
                     player_velocity = 0
@@ -111,6 +114,8 @@ def start():
                     running = False
                     pygame.quit()
                     sys.exit()
+                if event.key == pygame.K_f:
+                    pygame.display.toggle_fullscreen()
                 if event.key == pygame.K_RETURN:
                     return "Play"
         screen.fill((0, 0, 0))
@@ -118,9 +123,11 @@ def start():
         pygame.draw.rect(screen, color, computer)
         pygame.draw.ellipse(screen, color, ball)
         text = font1.render("Pong", True, color)
+        fs = font2.render("Press f to toggle full screen", True, color)
         screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height()))
         text = font2.render("Press Enter to start", True, (255, 255, 255))
         screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 + text.get_height() / 2))
+        screen.blit(fs, (width / 2 - fs.get_width() / 2, height / 2 + text.get_height() + fs.get_height()))
         pygame.display.flip()
         clock.tick(60)
 
@@ -142,6 +149,8 @@ def game_over():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_f:
+                    pygame.display.toggle_fullscreen()
                 if event.key == pygame.K_ESCAPE:
                     running = False
                     pygame.quit()
