@@ -11,9 +11,11 @@ clock = pygame.time.Clock()
 font1 = pygame.font.Font("font.ttf", 72)
 font2 = pygame.font.Font("font.ttf", 36)
 color = (37, 248, 250)
+score = 0
 
 
 def logic():
+    global score
     player_height = 150
     player_width = 10
     computer_height = 150
@@ -94,7 +96,6 @@ def start():
     computer_height = 150
     computer_width = 10
     player_velocity = 0
-    score = 0
     computer = pygame.Rect(width - computer_width, height / 2 - computer_height / 2, computer_width, computer_height)
     player = pygame.Rect(0, height / 2 - player_height / 2, player_width, player_height)
     ball = pygame.Rect(width / 2 - 10, height / 2 - 10, 20, 20)
@@ -126,6 +127,14 @@ def start():
 
 def game_over():
     running = True
+    is_high = False
+    record = open('highscore.dat', 'r')
+    highscore = int(record.readline())
+    if score > highscore:
+        highscore = score
+        record = open('highscore.dat', 'w')
+        record.write(str(highscore))
+        is_high = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -140,13 +149,15 @@ def game_over():
                 if event.key == pygame.K_RETURN:
                     return "Play"
         screen.fill((0, 0, 0))
+        high = font2.render("New Highscore: " + str(highscore), True, color)
         text = font1.render("Game Over", True, color)
         screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height()))
-        text = font2.render("Press Enter to Continue,Esc to exit", True, color)
-        screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 + text.get_height() / 2))
+        text2 = font2.render("Press Enter to Continue,Esc to exit", True, color)
+        screen.blit(text2, (width / 2 - text2.get_width() / 2, height / 2 + text2.get_height() / 2))
+        if is_high:
+            screen.blit(high, (width / 2 - high.get_width() / 2, height / 2 + high.get_height() + text.get_height()/2))
         pygame.display.flip()
         clock.tick(60)
-
 
 
 playing = True
