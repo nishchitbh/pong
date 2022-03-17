@@ -161,10 +161,11 @@ def game_over():
         high = font2.render("New Highscore: " + str(highscore), True, color)
         text = font1.render("Game Over", True, color)
         screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height()))
-        text2 = font2.render("Press Enter to Continue,Esc to exit", True, color)
+        text2 = font2.render("Press Enter to Continue,Esc to exit", True, (255, 255, 255))
         screen.blit(text2, (width / 2 - text2.get_width() / 2, height / 2 + text2.get_height() / 2))
         if is_high:
-            screen.blit(high, (width / 2 - high.get_width() / 2, height / 2 + high.get_height() + text.get_height()/2))
+            screen.blit(high,
+                        (width / 2 - high.get_width() / 2, height / 2 + high.get_height() + text.get_height() / 2))
         pygame.display.flip()
         clock.tick(60)
 
