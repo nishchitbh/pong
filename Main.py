@@ -1,9 +1,14 @@
-import pygame, sys, random
+import pygame, sys, random, os
 
 pygame.init()
 
 width = 1280
 height = 720
+
+try:
+    os.environ["DISPLAY"]
+except:
+    os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 screen = pygame.display.set_mode((width, height), vsync=True)
 pygame.display.set_caption("Pong")
