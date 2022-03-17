@@ -14,6 +14,7 @@ color = (37, 248, 250)
 score = 0
 
 
+
 def logic():
     full = False
     global score
