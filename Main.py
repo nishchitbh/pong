@@ -172,12 +172,53 @@ def game_over():
         clock.tick(60)
 
 
+def timer():
+    player_height = 150
+    player_width = 10
+    computer_height = 150
+    computer_width = 10
+    player_velocity = 0
+    computer = pygame.Rect(width - computer_width, height / 2 - computer_height / 2, computer_width, computer_height)
+    player = pygame.Rect(0, height / 2 - player_height / 2, player_width, player_height)
+    ball = pygame.Rect(width / 2 - 10, height / 2 - 10, 20, 20)
+    net = pygame.Rect(width / 2 - 5 / 2, 100, 5, height)
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+                if event.key == pygame.K_f:
+                    pygame.display.toggle_fullscreen()
+        score_display = font1.render(str(3), True, color)
+        for i in range(3, 0, -1):
+            text = font1.render(str(i), True, color)
+            screen.fill((0, 0, 0))
+            screen.blit(text, (width / 2 - text.get_width() / 2, 5))
+            pygame.draw.rect(screen, color, player)
+            pygame.draw.rect(screen, color, computer)
+            pygame.draw.ellipse(screen, color, ball)
+            pygame.draw.rect(screen, color, net)
+            pygame.display.flip()
+            time.sleep(1)
+            clock.tick(60)
+        return True
+
+
 playing = True
 
 a = start()
-if a == 'Play':
-    while playing:
-        playin = logic()
+while playing:
+    if a == 'Play':
+        wait = timer()
+        if wait:
+            playin = logic()
         if playin == "Lost":
             lost = game_over()
             if lost == "Play":
