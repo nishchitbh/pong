@@ -14,10 +14,43 @@ font1 = pygame.font.Font("font.ttf", 72)
 font2 = pygame.font.Font("font.ttf", 36)
 color = (37, 248, 250)
 score = 0
+button_inactive = (255, 255, 255)
+button_active = color
+settings_color = button_inactive
+play_color = button_inactive
+exit_color = button_inactive
+
+
+def settings():
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
+                    pygame.quit()
+                    sys.exit()
+                if event.key == pygame.K_f:
+                    pygame.display.toggle_fullscreen()
+                if event.key == pygame.K_RETURN:
+                    return "Play"
+        screen.fill((0, 0, 0))
+        text = font1.render("Settings", True, color)
+        screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height()))
+        text = font2.render("Press Enter to return", True, (255, 255, 255))
+        screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 + text.get_height() / 2))
+        pygame.display.flip()
+        clock.tick(60)
 
 
 def logic():
     full = False
+    bat_hit = pygame.mixer.Sound('bat_hit.mp3')
+    wall_hit = pygame.mixer.Sound('wall_hit.mp3')
     global score
     player_height = 150
     player_width = 10
@@ -69,12 +102,16 @@ def logic():
         player.y += player_velocity
         if ball.x <= 0:
             ball_velocity_x = -ball_velocity_x
+            pygame.mixer.Sound.play(wall_hit)
         if ball.x >= width - ball.width:
             ball_velocity_x = -ball_velocity_x
+            pygame.mixer.Sound.play(wall_hit)
         if ball.y <= 0:  # Top
             ball_velocity_y = -ball_velocity_y  # Bounce
+            pygame.mixer.Sound.play(wall_hit)
         if ball.y >= height - ball.height:  # Bottom
             ball_velocity_y = -ball_velocity_y  # Bounce
+            pygame.mixer.Sound.play(wall_hit)
         computer.y += ball_velocity_y
         if computer.y <= 0:
             computer.y = 0
@@ -86,8 +123,10 @@ def logic():
             player.y = height - player.height
         if ball.colliderect(computer):
             ball_velocity_x = -ball_velocity_x
+            pygame.mixer.Sound.play(bat_hit)
         if ball.colliderect(player):
             ball_velocity_x = -ball_velocity_x
+            pygame.mixer.Sound.play(bat_hit)
             score += 1
         if ball.x <= 0:
             return "Lost"
@@ -96,6 +135,7 @@ def logic():
 
 
 def start():
+    global settings_color, play_color, exit_color
     player_height = 150
     player_width = 10
     computer_height = 150
@@ -120,6 +160,7 @@ def start():
                     pygame.display.toggle_fullscreen()
                 if event.key == pygame.K_RETURN:
                     return "Play"
+        m_x, m_y = pygame.mouse.get_pos()
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, color, player)
         pygame.draw.rect(screen, color, computer)
@@ -127,9 +168,25 @@ def start():
         text = font1.render("Pong", True, color)
         fs = font2.render("Press f to toggle full screen", True, color)
         screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 - text.get_height()))
-        text = font2.render("Press Enter to start", True, (255, 255, 255))
-        screen.blit(text, (width / 2 - text.get_width() / 2, height / 2 + text.get_height() / 2))
+        settings = font2.render("Settings", True, settings_color)
+        play = font2.render('Play', True, play_color)
+        exit = font2.render('Exit', True, exit_color)
+        screen.blit(settings, (200, height / 2 + settings.get_height() / 2))
         screen.blit(fs, (width / 2 - fs.get_width() / 2, height / 2 + text.get_height() + fs.get_height()))
+        screen.blit(play, (width / 2 - play.get_width() / 2, height / 2 + play.get_height() / 2))
+        screen.blit(exit, (width - 200 - exit.get_width(), height / 2 + exit.get_height() / 2))
+        if m_x >= 200 and m_x <= 200 + settings.get_width() and m_y >= height / 2 + settings.get_height() / 2 and m_y <= height / 2 + 1.25 * settings.get_height():
+            settings_color = button_active
+        else:
+            settings_color = button_inactive
+        if m_x >= width / 2 - play.get_width() / 2 and m_x <= width / 2 + play.get_width() / 2 and m_y >= height / 2 + settings.get_height() / 2 and m_y <= height / 2 + 1.25 * settings.get_height():
+            play_color = button_active
+        else:
+            play_color = button_inactive
+        if m_x >= width - 200 - exit.get_width() and m_x <= width - 200 and m_y >= height / 2 + settings.get_height() / 2 and m_y <= height / 2 + 1.25 * settings.get_height():
+            exit_color = button_active
+        else:
+            exit_color = button_inactive
         pygame.display.flip()
         clock.tick(60)
 
