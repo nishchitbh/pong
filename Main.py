@@ -5,8 +5,6 @@ pygame.init()
 width = 1280
 height = 720
 
-os.environ["SDL_VIDEODRIVER"] = "dummy"
-
 screen = pygame.display.set_mode((width, height), vsync=True)
 pygame.display.set_caption("Pong")
 clock = pygame.time.Clock()
