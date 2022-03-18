@@ -133,12 +133,13 @@ def logic():
 
 
 def start():
-    global settings_color, play_color, exit_color
+    global settings_color, play_color, exit_color, settings, play, exit
     player_height = 150
     player_width = 10
     computer_height = 150
     computer_width = 10
     player_velocity = 0
+    m_x, m_y = [0, 0]
     computer = pygame.Rect(width - computer_width, height / 2 - computer_height / 2, computer_width, computer_height)
     player = pygame.Rect(0, height / 2 - player_height / 2, player_width, player_height)
     ball = pygame.Rect(width / 2 - 10, height / 2 - 10, 20, 20)
@@ -158,6 +159,16 @@ def start():
                     pygame.display.toggle_fullscreen()
                 if event.key == pygame.K_RETURN:
                     return "Play"
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                m_x1, m_y1 = pygame.mouse.get_pos()
+                if m_x >= 200 and m_x <= 200 + settings.get_width() and m_y >= height / 2 + settings.get_height() / 2 and m_y <= height / 2 + 1.25 * settings.get_height():
+                    return ('Settings')
+                elif m_x >= width / 2 - play.get_width() / 2 and m_x <= width / 2 + play.get_width() / 2 and m_y >= height / 2 + settings.get_height() / 2 and m_y <= height / 2 + 1.25 * settings.get_height():
+                    return ('Play')
+                elif m_x >= width - 200 - exit.get_width() and m_x <= width - 200 and m_y >= height / 2 + settings.get_height() / 2 and m_y <= height / 2 + 1.25 * settings.get_height():
+                    running = False
+                    pygame.quit()
+                    sys.exit()
         m_x, m_y = pygame.mouse.get_pos()
         screen.fill((0, 0, 0))
         pygame.draw.rect(screen, color, player)
@@ -271,6 +282,14 @@ playing = True
 a = start()
 while playing:
     if a == 'Play':
+        wait = timer()
+        if wait:
+            playin = logic()
+        if playin == "Lost":
+            lost = game_over()
+            if lost == "Play":
+                playing = True
+    elif a == 'Settings':
         wait = timer()
         if wait:
             playin = logic()
